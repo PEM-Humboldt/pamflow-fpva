@@ -1,10 +1,14 @@
-<div align="center">
-  <img src="https://github.com/pamflow/pamflow/raw/main/docs/meta/images/pamflow_logo.png" alt="pamflow logo" width="400"/>
+# pamflow - FPV Amazonia project
+Analysis data processing workflow for processing passive acoustic recordings carried out in the La Esperanza village in Macarena, Meta, between September and October 2025. This data was collected within the framework of the Fondo para la Vida - Amazonia project. This project aims to encourage biodiversity monitoring by the local community, following the monitoring cycle and using established protocols for passive acoustic monitoring.
+More information in [CEIBA repository](https://i2d.humboldt.org.co/resource?r=fpva_pam).
+
+Powered by:
+<div align="left">
+  <img src="https://github.com/pamflow/pamflow/raw/main/docs/meta/images/pamflow_logo.png" alt="pamflow logo" width="140"/>
 </div>
 
 ![Python version](https://img.shields.io/badge/python-3.9%20%7C%203.10%20%7C%203.11-blue.svg)
 
-**pamflow** is a workflow for analyzing passive acoustic monitoring data using Python. It is designed to offer an easy-to-use and reproducible framework for researchers, conservation biologists, citizen scientists, and anyone interested in ecoacoustics and soundscape ecology.
 
 ## Before You Begin
 
