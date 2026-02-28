@@ -15,7 +15,7 @@ pamflow_tutorial_data
 minimal_sample_data
 data/**
 logs/**
-notebooks/**
+#notebooks/**
 
 # except their sub-folders
 !data/**/
