@@ -9,7 +9,7 @@ Now that your computer has the required programms for running **pamflow** you ca
 ```
 
 ### 1. Download audio recordings
-The audio recordings you'll need for this tutorial can be found on [Zenodo](https://doi.org/10.5281/zenodo.16922848). This sample data is provided to show you how to use pamflow. If you plan to use these recordings for other purposes, please get in touch and make sure to give proper attribution.
+The audio recordings you'll need for this tutorial can be found on [Google drive](https://drive.google.com/drive/folders/1L74aYdZ972R96AYnw9Fe2k4Vi3Cw7uF7). This sample data is provided to show you how to use pamflow. If you plan to use these recordings for other purposes, please get in touch and make sure to give proper attribution.
 
 ### 2. Audio Root Directory
 
@@ -42,6 +42,8 @@ Each of the {{number_of_sensors}} subfolders corresponds to one of the installed
 Field researchers installed the acoustic sensors and took notes on everything important regarding the installation: coordinates of the site, date and time of installation,  sensor characteristics and  ecological traits of the deployment site. 
 
 These notes were handed out to you along with the recordings in a format  called `field_deployments_sheet`. This is a `.xlsx` file with one row per installed sensor having all the previously mentioned data regarding the installation of the sensor. 
+
+It is important that this sheet meets the requirements listed on  [Input data standards](https://pamflow.readthedocs.io/en/latest/data_standardization/data_exchange_format.html#field-deployment-sheet). Additionally, the values at the column `recorderID` musth matche the names of the subdirectories in the `audio_root_directory`. This ensures proper linking between metadata and recorded audio files.
 
 ### 4. Target species
 
