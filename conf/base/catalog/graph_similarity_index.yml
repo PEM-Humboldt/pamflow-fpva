@@ -1,0 +1,7 @@
+template_forest@pandas:
+  type: pandas.CSVDataset
+  filepath: data/input/graph_similarity_index/template_forest.csv
+
+template_grassland@pandas:
+  type: pandas.CSVDataset
+  filepath: data/input/graph_similarity_index/template_grassland.csv

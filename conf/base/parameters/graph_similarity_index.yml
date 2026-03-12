@@ -1,0 +1,8 @@
+# This is a boilerplate parameters config generated for pipeline 'graph_similarity_index'
+# using Kedro 0.19.8.
+#
+# Documentation for this file format can be found in "Parameters"
+# Link: https://docs.kedro.org/en/0.19.8/configuration/parameters.html
+graph_similarity_index:
+  distance: "cosine"
+  sample_graph_path: "data/output/graphical_soundscape/graph_G01.csv"
