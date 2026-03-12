@@ -1,8 +1,10 @@
 # pamflow - FPV Amazonia
 Analysis data processing workflow for processing passive acoustic recordings carried out in the La Esperanza village in Macarena, Meta, between September and October 2025. This data was collected within the framework of the Fondo para la Vida - Amazonia project. This project aims to encourage biodiversity monitoring by the local community, following the monitoring cycle and using established protocols for passive acoustic monitoring.
 
+* IAVH GDOC number: 25-203
 * More information in [CEIBA repository](https://i2d.humboldt.org.co/resource?r=fpva_pam).
 * Raw audio data and latest output from the anlisys is stored in the **NAS FPVA**.
+* The global analisys status is being updated in this [google doc](https://docs.google.com/document/d/11jsY_UCns9o6YVwf_DiIB68H89nh5ViIKcze2vXsBU4/edit?usp=sharing)
 
 Powered by:
 <div align="left">
