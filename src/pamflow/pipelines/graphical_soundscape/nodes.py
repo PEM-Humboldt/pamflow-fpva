@@ -50,8 +50,8 @@ def graphical_soundscape_pamflow(media, graphical_soundscape_parameters):
     db_range = graphical_soundscape_parameters["db_range"]
     min_distance = graphical_soundscape_parameters["min_distance"]
     n_jobs = graphical_soundscape_parameters["n_jobs"]
-    media["date"] = pd.to_datetime(media.timestamp)
-    media["time"] = media.date.dt.hour
+    #media["date"] = pd.to_datetime(media.timestamp)
+    media["time"] = pd.to_datetime(media.timestamp).dt.strftime("%H")
     media = media[media["fileLength"] > 0]
 
     # Compute graphical soundscapes by deploymentID
