@@ -5,15 +5,33 @@ Graphical soundscapes from sites are compared with two templates representing a 
 
 import pandas as pd
 from scipy.spatial.distance import pdist
+import logging
 
-def validate_graph(path):
-    sample = pd.read_csv(path)
-    return pd.Series(sample.values.ravel())
+# Set up logging
+logger = logging.getLogger(__name__)
 
-def compute_index(sample, distance_metric, template_forest, template_grassland):
-    dist_forest = pdist([sample, template_forest["Forest"]], metric=distance_metric)
-    dist_grassland = pdist([sample, template_grassland["Grassland"]], metric=distance_metric)
-    index_value = dist_grassland[0] - dist_forest[0]
-    print(f"Index value: {index_value:.4f}")
-    return index_value
+def compute_index(graph_partitioned_dataset, distance_metric, template_forest, template_grassland):
+    """Compute the similarity index for each graph in the partitioned dataset."""
+
+    index_values = pd.DataFrame(columns=['graphSimilarityIndex'])
+    for graph_name, graph_load_func in sorted(graph_partitioned_dataset.items()):
+        # load graphical soundscape sample data and format it as a 1D array
+        sample = graph_load_func()
+        sample = sample.values.ravel()
+        deployment_id = graph_name.split("_")[1]  # extract deploymentID from graph name
+        
+        # compute distances to templates and calculate index value
+        dist_forest = pdist([sample, template_forest["Forest"]], metric=distance_metric)
+        dist_grassland = pdist([sample, template_grassland["Grassland"]], metric=distance_metric)
+        index_value = dist_grassland[0] - dist_forest[0]
+        
+        # save index value for each graph in dataframe
+        index_values.loc[deployment_id] = index_value
+    
+    # log that values were computed successfully
+    logger.info("Graph similarity index values computed successfully.")
+    index_values.reset_index(inplace=True)
+    index_values.rename(columns={'index': 'deploymentID'}, inplace=True)
+    
+    return index_values
     

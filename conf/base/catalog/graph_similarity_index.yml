@@ -5,3 +5,7 @@ template_forest@pandas:
 template_grassland@pandas:
   type: pandas.CSVDataset
   filepath: data/input/graph_similarity_index/template_grassland.csv
+
+graph_similarity_index@pandas:
+  type: pandas.CSVDataset
+  filepath: data/output/similarity_index/graph_similarity_index.csv
