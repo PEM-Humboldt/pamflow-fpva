@@ -6,6 +6,8 @@ Analysis data processing workflow for processing passive acoustic recordings car
 * Raw audio data and latest output from the anlisys is stored in the **NAS FPVA**.
 * The global analisys status is being updated in this [google doc](https://docs.google.com/document/d/11jsY_UCns9o6YVwf_DiIB68H89nh5ViIKcze2vXsBU4/edit?usp=sharing)
 
+**Note:** This repository is a fork of [pamflow](https://github.com/pamflow-org/pamflow). For general documentation on pamflow, visit the [official documentation](https://pamflow.readthedocs.io/en/latest/).
+
 Powered by:
 <div align="left">
   <img src="https://github.com/pamflow/pamflow/raw/main/docs/meta/images/pamflow_logo.png" alt="pamflow logo" width="140"/>
@@ -133,6 +135,13 @@ kedro run --pipeline=acoustic_indices
 ```bash
 kedro run --pipeline=graphical_soundscape
 ```
+
+#### 2.6. Compute Graph Similarity Index
+```bash
+kedro run --pipeline=graph_similarity_index
+```
+
+In addition to the base pamflow workflow pipelines, this repository includes the `graph_similarity_index` pipeline to compute a similarity index between sites and reference soundscapes.
 
 ### Access output data
 
