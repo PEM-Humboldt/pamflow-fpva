@@ -14,6 +14,7 @@ from pamflow.pipelines.acoustic_indices import pipeline as acoustic_indices
 from pamflow.pipelines.species_detection import pipeline as species_detection
 from pamflow.pipelines.data_science import pipeline as data_science
 from pamflow.pipelines.export import pipeline as export
+from pamflow.pipelines.birds_index import pipeline as birds_index
 from pamflow.pipelines.graph_similarity_index import pipeline as graph_similarity_index
 
 
@@ -31,6 +32,7 @@ def register_pipelines() -> Dict[str, Pipeline]:
     data_science_pipeline = data_science.create_pipeline()
     export_pipeline = export.create_pipeline()
     graph_similarity_index_pipeline = graph_similarity_index.create_pipeline()
+    birds_index_index_pipeline = birds_index.create_pipeline()
 
     pamflow_pipeline = (
         data_preparation_pipeline
@@ -39,6 +41,7 @@ def register_pipelines() -> Dict[str, Pipeline]:
         + species_detection_pipeline
         + graph_similarity_index_pipeline
         + quality_control_pipeline
+        +birds_index_index_pipeline
     )  # no incluir data_science
 
     return {
@@ -53,4 +56,5 @@ def register_pipelines() -> Dict[str, Pipeline]:
         "data_science": data_science_pipeline,
         "export": export_pipeline,
         "graph_similarity_index": graph_similarity_index_pipeline,
+        "birds_index": birds_index_index_pipeline,
     }
