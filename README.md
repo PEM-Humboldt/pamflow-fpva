@@ -113,35 +113,42 @@ However, for the first execution, it is recommended to run one pipeline at a tim
 
 #### 2.1. Prepare data
 ```bash
-kedro run --pipeline=data_preparation
+kedro run --pipeline data_preparation
 ```
 
 #### 2.2. Revise quality of deployments and recordings
 ```bash
-kedro run --pipeline=quality_control
+kedro run --pipeline quality_control
 ```
 
 #### 2.3. Detect species with AI
 ```bash
-kedro run --pipeline=species_detection
+kedro run --pipeline species_detection
 ```
 
 #### 2.4. Compute Acoustic Indices
 ```bash
-kedro run --pipeline=acoustic_indices
+kedro run --pipeline acoustic_indices
 ```
 
 #### 2.5. Generate Graphical Soundscapes
 ```bash
-kedro run --pipeline=graphical_soundscape
+kedro run --pipeline graphical_soundscape
 ```
 
 #### 2.6. Compute Graph Similarity Index
 ```bash
-kedro run --pipeline=graph_similarity_index
+kedro run --pipeline graph_similarity_index
 ```
+More information for the graph similarity index [here](src/pamflow/pipelines/graph_similarity_index/README.md)
 
-In addition to the base pamflow workflow pipelines, this repository includes the `graph_similarity_index` pipeline to compute a similarity index between sites and reference soundscapes.
+#### 2.7. Compute Birds Index
+```bash
+kedro run --pipeline birds_index
+```
+More information for the birds index [here](src/pamflow/pipelines/birds_index).
+
+In addition to the base pamflow workflow pipelines, this repository includes the `graph_similarity_index` pipeline to compute a similarity index between sites and reference soundscapes, and a a normalized bird community index for each deployment based on validated species detections `birds_index`.
 
 ### Access output data
 
