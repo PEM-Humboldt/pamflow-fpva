@@ -72,83 +72,82 @@ For an example of properly formated data or to have a sample dataset to try **pa
 
 ## Getting Started
 
-### 1. Configure Local Settings
+### 1. Configure Settings for Each Season
 
-Inside the folder `./conf/local/` create the files `./conf/local/parameters.yml` and `./conf/local/catalog.yml` as follows.
+Inside the folder `./conf/<season>/` create the files `./conf/<season>/parameters.yml` and `./conf/<season>/catalog.yml` as follows.
 
-Edit the `./conf/local/parameters.yml` file to specify the path to your audio files:
+Replace <season> with a short identifier for your sampling period (e.g., dry_2023, wet_2024), which must match the name of the corresponding folder under ./conf/.
+
+Edit the `./conf/<season>/parameters.yml` file to specify the path to your audio files:
 ```yaml
 audio_root_directory: <path to your directory with audio files>
 ```
 
-Edit the `./conf/local/parameters.yml` file to specify the timezone of your audios recordings using a valid IANA time zone in Area/City format (e.g., Europe/Berlin, America/Bogota)
+Edit the `./conf/<season>/parameters.yml` file to specify the timezone of your audio recordings using a valid IANA time zone in Area/City format (e.g., Europe/Berlin, America/Bogota):
 ```yaml
-timezone: <prefered timezone>
+timezone: <preferred timezone>
 ```
 
-Edit the `./conf/local/catalog.yml` file to define the path to your field deployment sheet:
+Edit the `./conf/<season>/catalog.yml` file to define the path to your field deployment sheet:
 ```yaml
 field_deployments_sheet@pandas:
   type: pandas.ExcelDataset
   filepath: <path to your Excel file with deployment information>
 ```
-For providing a file with species of interest, edit the `./conf/local/catalog.yml` file to define the path to your target species file:
 
+For providing a file with species of interest, edit the `./conf/<season>/catalog.yml` file to define the path to your target species file:
 ```yaml
 target_species@pandas:
   type: pamflow.datasets.pamDP.target_species.TargetSpecies
   filepath: <path to your .csv file with target species>
 ```
 
-
-
-
 ### 2. Run Workflows
 
 The workflow can be executed entirely with the command:
 ```bash
-kedro run
+kedro run --env=<season>
 ```
 However, for the first execution, it is recommended to run one pipeline at a time for better control.
 
 #### 2.1. Prepare data
 ```bash
-kedro run --pipeline data_preparation
+kedro run --env=<season> --pipeline data_preparation
 ```
 
 #### 2.2. Revise quality of deployments and recordings
 ```bash
-kedro run --pipeline quality_control
+kedro run --env=<season> --pipeline quality_control
 ```
 
 #### 2.3. Detect species with AI
 ```bash
-kedro run --pipeline species_detection
+kedro run --env=<season> --pipeline species_detection
 ```
 
 #### 2.4. Compute Acoustic Indices
 ```bash
-kedro run --pipeline acoustic_indices
+kedro run --env=<season> --pipeline acoustic_indices
 ```
 
 #### 2.5. Generate Graphical Soundscapes
 ```bash
-kedro run --pipeline graphical_soundscape
+kedro run --env=<season> --pipeline graphical_soundscape
 ```
 
 #### 2.6. Compute Graph Similarity Index
 ```bash
-kedro run --pipeline graph_similarity_index
+kedro run --env=<season> --pipeline graph_similarity_index
 ```
-More information for the graph similarity index [here](src/pamflow/pipelines/graph_similarity_index/README.md)
+More information for the graph similarity index [here](src/pamflow/pipelines/graph_similarity_index/README.md).
 
 #### 2.7. Compute Birds Index
 ```bash
-kedro run --pipeline birds_index
+kedro run --env=<season> --pipeline birds_index
 ```
 More information for the birds index [here](src/pamflow/pipelines/birds_index).
 
-In addition to the base pamflow workflow pipelines, this repository includes the `graph_similarity_index` pipeline to compute a similarity index between sites and reference soundscapes, and a a normalized bird community index for each deployment based on validated species detections `birds_index`.
+In addition to the base pamflow workflow pipelines, this repository includes the `graph_similarity_index` pipeline to compute a similarity index between sites and reference soundscapes, and a normalized bird community index for each deployment based on validated species detections (`birds_index`).
 
 ### Access output data
 

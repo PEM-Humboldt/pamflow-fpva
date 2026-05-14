@@ -1,0 +1,8 @@
+## t1
+audio_root_directory: "/mnt/fpvaudios/24-052 FPVA/t1/"
+# Parameters used in species_detection pipeline
+species_detection_parameters:
+  n_jobs: -1 #Number of cores used in parallelization: -1 forces to use all the cores available.
+  minimum_observations: 60 #Minimum number of detections for a species to be considered  in the observations format
+  segment_size: 60 #Number of sample segments per species,
+  manual_annotations_file_name: 'species_manual_annotations' #prefix in file name for manual annotations:  {manual_annotations_file_name}_{species}
