@@ -14,9 +14,9 @@ import pandas as pd
 
 
 #%% Set variables
-path_observations = '../../data/output/species_detection/unthresholded_observations.csv'
-path_save = '../../data/output/species_detection/observations_updated.csv'
-species_th_path = '../../data/output/species_detection/validation_based_thresholds.csv'
+path_observations = '../../data/output_t2/species_detection/unthresholded_observations.csv'
+path_save = '../../data/output_t2/species_detection/observations_updated.csv'
+species_th_path = '../../data/output_t2/species_detection/validation_based_thresholds.csv'
 
 print("Loading species thresholds...")
 # Load species thresholds
