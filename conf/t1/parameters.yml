@@ -1,5 +1,7 @@
 ## t1
 audio_root_directory: "/mnt/fpvaudios/24-052 FPVA/t1/"
+timezone: "America/Bogota"
+
 # Parameters used in species_detection pipeline
 species_detection_parameters:
   n_jobs: -1 #Number of cores used in parallelization: -1 forces to use all the cores available.
