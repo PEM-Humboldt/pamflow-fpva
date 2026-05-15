@@ -5,4 +5,4 @@
 # Link: https://docs.kedro.org/en/0.19.8/configuration/parameters.html
 graph_similarity_index:
   distance: "cosine"
-  sample_graph_path: "data/output/graphical_soundscape/graph_G01.csv"
+  sample_graph_path: "${globals:output_dir}/graphical_soundscape/graph_G01.csv"
