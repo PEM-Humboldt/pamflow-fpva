@@ -4,6 +4,7 @@ Graphical soundscapes from sites are compared with two templates representing a 
 """
 
 import pandas as pd
+import numpy as np
 from scipy.spatial.distance import pdist
 import logging
 
@@ -35,3 +36,27 @@ def compute_index(graph_partitioned_dataset, distance_metric, template_forest, t
     
     return index_values
     
+
+def remove_failed_deployments(index_values, deployments):
+    """ Replace invalid index values by NaN for deployments that had quality issues """
+    col = 'deploymentTags'
+    
+    if col not in deployments.columns or deployments[col].isna().all() or (deployments[col] == '').all():
+        logger.warning("No deployment quality information found in 'deploymentTags' — values left unchanged.")
+        return index_values
+    
+    failed_deployments = deployments.deploymentID[
+        deployments[col] == 'deploymentQuality:failed'
+    ].tolist()
+    
+    if not failed_deployments:
+        logger.info("No failed deployments found — values left unchanged.")
+        return index_values
+    
+    index_values.loc[
+        index_values['deploymentID'].isin(failed_deployments), 
+        'graphSimilarityIndex'
+    ] = np.nan
+    
+    logger.info(f"Invalid graph similarity index removed for {len(failed_deployments)} failed deployment(s).")
+    return index_values

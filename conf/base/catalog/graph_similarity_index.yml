@@ -9,3 +9,5 @@ template_grassland@pandas:
 graph_similarity_index@pandas:
   type: pandas.CSVDataset
   filepath: ${globals:output_dir}/similarity_index/graph_similarity_index.csv
+  save_args:
+    na_rep: NaN
