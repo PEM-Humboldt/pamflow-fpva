@@ -6,6 +6,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.patches import FancyBboxPatch
 import logging
+
+# Set up logging
+logger = logging.getLogger(__name__)
+
+
 from pamflow.pipelines.species_detection.utils import (
     species_detection_single_file,
     trim_audio,
@@ -37,4 +42,28 @@ def birds_index(thresholds, observations):
                                                     ).reset_index()
 
     birds_index['indice'] = birds_index['indice']/thresholds['scientificName'].nunique()
+    return birds_index
+
+def remove_failed_deployments_birds_index(birds_index, deployments):
+    """ Replace invalid index values by NaN for deployments that had quality issues """
+    col = 'deploymentTags'
+    
+    if col not in deployments.columns or deployments[col].isna().all() or (deployments[col] == '').all():
+        logger.warning("No deployment quality information found in 'deploymentTags' — values left unchanged.")
+        return birds_index
+    
+    failed_deployments = deployments.deploymentID[
+        deployments[col] == 'deploymentQuality:failed'
+    ].tolist()
+    
+    if not failed_deployments:
+        logger.info("No failed deployments found — values left unchanged.")
+        return birds_index
+    
+    birds_index.loc[
+        birds_index['deploymentID'].isin(failed_deployments), 
+        'indice'
+    ] = np.nan
+    
+    logger.info(f"Invalid birds index removed for {len(failed_deployments)} failed deployment(s).")
     return birds_index

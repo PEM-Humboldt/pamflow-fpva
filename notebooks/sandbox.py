@@ -1,27 +1,15 @@
-from time import sleep
-from rich.progress import track
+import pandas as pd
 
-# 1. Define the function you want to track
-def process_data(items_to_process):
-    """
-    Tracks the progress of a loop using rich.progress.track.
-    """
-    # 2. Wrap the iterable (list, range, etc.) with track()
-    for item in track(items_to_process, description="[green]Processing files..."):
-        # 3. Simulate work being done
-        sleep(0.1) 
-        
-        # You can access the item normally within the loop
-        # print(f"Processed item: {item}")
+df = pd.read_csv('../data/output_t2/species_detection/observations.csv')
 
+mask = df['classificationTimestamp'].str.contains(r'[-+]\d{4}$', na=False, regex=True)
+print(f"Rows with timezone offset: {len(df[mask])}")
 
-if __name__ == "__main__":
-    
-    # Define the total number of steps/items
-    TOTAL_ITEMS = 50
-    data_list = range(TOTAL_ITEMS)
-    
-    # Run the function
-    print("Starting the heavy lifting...")
-    process_data(data_list)
-    print("Processing complete! ✨")
+df['classificationTimestamp'] = pd.to_datetime(
+    df['classificationTimestamp'], 
+    format='ISO8601',
+    utc=True
+).dt.strftime('%Y-%m-%dT%H:%M:%S')
+
+df.to_csv('../data/output_t2/species_detection/observations_clean.csv', index=False)
+print(f"Done. All timestamps normalized to ISO8601 without offset.")

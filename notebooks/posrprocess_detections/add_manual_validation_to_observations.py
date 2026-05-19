@@ -40,7 +40,7 @@ for species in species_list:
         # update classifiedBy
         observations.loc[idx_obs, 'classifiedBy'] = row.classifiedBy
         # update classificationTimestamp Formatted as an ISO 8601 string with timezone designator as today. To hour accuracy maximum.
-        observations.loc[idx_obs, 'classificationTimestamp'] = pd.Timestamp.now(tz='America/Bogota').strftime('%Y-%m-%dT%H:%M:%S%z')
+        observations.loc[idx_obs, 'classificationTimestamp'] = pd.Timestamp.now(tz='America/Bogota').strftime('%Y-%m-%dT%H:%M:%S')
         # update observationComments
         observations.loc[idx_obs, 'observationComments'] = row.observationsComments
 
@@ -70,4 +70,4 @@ observations.classifiedBy.value_counts()
 observations.loc[observations.classificationMethod=='human'].scientificName.value_counts()
 
 #%% Save
-#observations.to_csv("../../data/output_t2/species_detection/unthresholded_observations.csv", index=False)
+observations.to_csv("../../data/output_t2/species_detection/unthresholded_observations.csv", index=False)

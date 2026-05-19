@@ -1,6 +1,9 @@
 birds_index@pandas:
   type: pandas.CSVDataset
   filepath: ${globals:output_dir}/birds_index/avifauna_interior_bosque.csv
+  save_args:
+    na_rep: NaN
+
 thresholds@pandas:
   type: pandas.CSVDataset
   filepath: ${globals:output_dir}/species_detection/validation_based_thresholds.csv

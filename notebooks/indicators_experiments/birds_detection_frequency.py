@@ -1,8 +1,9 @@
 import pandas as pd
 
 # Load data
-observations = pd.read_csv("../../data/output_t1/species_detection/observations.csv")
-media = pd.read_csv("../../data/output_t1/data_preparation/media.csv")[["mediaID", "deploymentID", "timestamp"]]
+path_output = "../../data/output_t1/"
+observations = pd.read_csv(f"{path_output}/species_detection/observations.csv")
+media = pd.read_csv(f"{path_output}/data_preparation/media.csv")[["mediaID", "deploymentID", "timestamp"]]
 
 # Target species
 target_species = [
@@ -25,9 +26,18 @@ obs = (
     .merge(media, on="mediaID", how="left")
 )
 
-# Parse dates
-obs["date"] = pd.to_datetime(obs["timestamp"]).dt.date
-media["date"] = pd.to_datetime(media["timestamp"]).dt.date
+# Parse dates - day is the unit of analisys
+#obs["date"] = pd.to_datetime(obs["timestamp"]).dt.date
+#media["date"] = pd.to_datetime(media["timestamp"]).dt.date
+
+# Try week as the unit of analysis
+obs["week"] = pd.to_datetime(obs["timestamp"]).dt.isocalendar().week
+obs["year"] = pd.to_datetime(obs["timestamp"]).dt.isocalendar().year
+obs["date"] = obs[["year", "week"]].apply(lambda x: f"{x['year']}-W{x['week']:02d}", axis=1)
+
+media["week"] = pd.to_datetime(media["timestamp"]).dt.isocalendar().week
+media["year"] = pd.to_datetime(media["timestamp"]).dt.isocalendar().year
+media["date"] = media[["year", "week"]].apply(lambda x: f"{x['year']}-W{x['week']:02d}", axis=1)
 
 # Total recording days per deployment (from media, not observations)
 recording_days = (
@@ -72,21 +82,29 @@ indicator_by_site = (
     .sort_values("indicator", ascending=False)
 )
 
+# Save results
+indicator_by_site.to_csv(f"{path_output}/birds_index/insectivores_detection_frequency.csv", index=False)
+
 # Regional indicator (mean frequency across species and deployments)
 regional_indicator = detection_freq["frequency"].mean()
 
-print(indicator_by_site)
+print(indicator_by_site.sort_values("indicator", ascending=False))
 print(f"\nRegional indicator: {regional_indicator:.3f}")
 
 # Compare with other indicator
-df = pd.read_csv("../../data/output_t1/similarity_index/graph_similarity_index.csv")
+#df = pd.read_csv(f"{path_output}/similarity_index/graph_similarity_index.csv")
+df = pd.read_csv(f"{path_output}/birds_index/avifauna_interior_bosque.csv")
 df = df.merge(indicator_by_site, on="deploymentID", how="left")
+df.dropna(inplace=True)  # Eliminar filas con valores NaN
 
 import seaborn as sns
-sns.regplot(data=df, x='graphSimilarityIndex', y='indicator', scatter=True, color='red')
-
 import statsmodels.api as sm
-# 3. Regresión Lineal Detallada
-X = sm.add_constant(df['graphSimilarityIndex']) # añade intercepto
+
+# Plot
+col_indicator = 'indice'
+sns.regplot(data=df, x=col_indicator, y='indicator', scatter=True, color='red')
+
+# Regresión Lineal Detallada
+X = sm.add_constant(df[col_indicator]) # añade intercepto
 model = sm.OLS(df['indicator'], X).fit()
 model.summary()
