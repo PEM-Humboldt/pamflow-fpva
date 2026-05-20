@@ -1,48 +1,42 @@
-import os
-import concurrent.futures
 import pandas as pd
-import itertools as it
 import numpy as np
-import matplotlib.pyplot as plt
-from matplotlib.patches import FancyBboxPatch
 import logging
 
 # Set up logging
 logger = logging.getLogger(__name__)
 
 
-from pamflow.pipelines.species_detection.utils import (
-    species_detection_single_file,
-    trim_audio,
-)
-from pamflow.datasets.pamDP.observations import observations_pamdp_columns
-from rich.console import Console
+def calculate_birds_index(df_thresholds: pd.DataFrame, df_observations: pd.DataFrame) -> pd.DataFrame:
+    """
+    Filters bird observations based on quality thresholds and calculates 
+    a normalized diversity index per deployment.
+    """
+    # 1. Filter for valid thresholds
+    valid_thresholds = df_thresholds[df_thresholds['Comments'] == 'ok']
+    total_unique_species = valid_thresholds['scientificName'].nunique()
+    
+    if total_unique_species == 0:
+        raise ValueError("No valid species found in thresholds after filtering 'Comments' == 'ok'.")
 
-def birds_index(thresholds, observations):
-    #tpr_conf01,proba_tpr0.95
-    thresholds=thresholds[thresholds['Comments']=='ok']
+    # 2. Filter and merge observations with thresholds
+    filtered_obs = df_observations[df_observations['scientificName'].isin(valid_thresholds['scientificName'])]
+    merged_df = filtered_obs.merge(valid_thresholds, on='scientificName', how='left')
 
-    observations = observations[observations['scientificName'].isin(thresholds['scientificName'])]
-    observations = observations.merge(thresholds, 
-                                    on='scientificName', 
-                                    how='left'
-                                    )
+    # 3. Identify confident detections (true positive rate at 95% confidence)
+    is_confident_detection = merged_df['classificationProbability'] >= merged_df['proba_tpr0.95']
+    merged_df['confident_species'] = np.where(is_confident_detection, merged_df['scientificName'], None)
 
-    birds_index=observations.assign(#conf01= np.where(observations['classificationProbability']>=observations['tpr_conf01'], 
-                                                    #observations['scientificName'], 
-                                                    #None
-                                                    #),
-                    conf095= np.where(observations['classificationProbability']>=observations['proba_tpr0.95'],
-                                                    observations['scientificName'],
-                                                    None
-                                                    )
-                                
-                    ).groupby('deploymentID').agg(#indice_01=('conf01', 'nunique'), 
-                                                    indice=('conf095', 'nunique')
-                                                    ).reset_index()
-
-    birds_index['indice'] = birds_index['indice']/thresholds['scientificName'].nunique()
-    return birds_index
+    # 4. Aggregate by deployment and normalize the index
+    birds_index_df = (
+        merged_df
+        .groupby('deploymentID')
+        .agg(unique_confident_birds=('confident_species', 'nunique'))
+        .reset_index()
+    )
+    
+    birds_index_df['indice'] = birds_index_df['unique_confident_birds'] / total_unique_species
+    
+    return birds_index_df[['deploymentID', 'indice']]
 
 def remove_failed_deployments_birds_index(birds_index, deployments):
     """ Replace invalid index values by NaN for deployments that had quality issues """
