@@ -12,7 +12,7 @@ def calculate_birds_index(df_thresholds: pd.DataFrame, df_observations: pd.DataF
     a normalized diversity index per deployment.
     """
     # 1. Filter for valid thresholds
-    valid_thresholds = df_thresholds[df_thresholds['Comments'] == 'ok']
+    valid_thresholds = df_thresholds[df_thresholds['indicator'] == 'ok']
     total_unique_species = valid_thresholds['scientificName'].nunique()
     
     if total_unique_species == 0:
