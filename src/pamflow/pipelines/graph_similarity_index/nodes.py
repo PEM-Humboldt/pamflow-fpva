@@ -38,7 +38,13 @@ def compute_index(graph_partitioned_dataset, distance_metric, template_forest, t
     
 
 def remove_failed_deployments(index_values, deployments):
-    """ Replace invalid index values by NaN for deployments that had quality issues """
+    """ Add locationID and replace invalid index values by NaN for deployments that had quality issues """
+    index_values = index_values.merge(
+        deployments[['deploymentID', 'locationID']].drop_duplicates('deploymentID'),
+        on='deploymentID',
+        how='left',
+    )[['deploymentID', 'locationID', 'graphSimilarityIndex']]
+
     col = 'deploymentTags'
     
     if col not in deployments.columns or deployments[col].isna().all() or (deployments[col] == '').all():
