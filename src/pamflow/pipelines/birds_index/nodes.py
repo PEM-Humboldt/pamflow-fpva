@@ -12,11 +12,13 @@ def calculate_birds_index(df_thresholds: pd.DataFrame, df_observations: pd.DataF
     a normalized diversity index per deployment.
     """
     # 1. Filter for valid thresholds
-    valid_thresholds = df_thresholds[df_thresholds['indicator'] == 'ok']
+    # 'indicator' is not present in every environment's thresholds file; fall back to 'Comments'
+    status_col = 'indicator' if 'indicator' in df_thresholds.columns else 'Comments'
+    valid_thresholds = df_thresholds[df_thresholds[status_col] == 'ok']
     total_unique_species = valid_thresholds['scientificName'].nunique()
     
     if total_unique_species == 0:
-        raise ValueError("No valid species found in thresholds after filtering 'Comments' == 'ok'.")
+        raise ValueError(f"No valid species found in thresholds after filtering '{status_col}' == 'ok'.")
 
     # 2. Filter and merge observations with thresholds
     filtered_obs = df_observations[df_observations['scientificName'].isin(valid_thresholds['scientificName'])]
@@ -39,7 +41,16 @@ def calculate_birds_index(df_thresholds: pd.DataFrame, df_observations: pd.DataF
     return birds_index_df[['deploymentID', 'indice']]
 
 def remove_failed_deployments_birds_index(birds_index, deployments):
-    """ Replace invalid index values by NaN for deployments that had quality issues """
+    """
+    Add locationID to the index and replace invalid index values by NaN
+    for deployments that had quality issues
+    """
+    birds_index = birds_index.merge(
+        deployments[['deploymentID', 'locationID']].drop_duplicates('deploymentID'),
+        on='deploymentID',
+        how='left',
+    )[['deploymentID', 'locationID', 'indice']]
+
     col = 'deploymentTags'
     
     if col not in deployments.columns or deployments[col].isna().all() or (deployments[col] == '').all():
